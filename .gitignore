@@ -1,0 +1,24 @@
+# 環境變數文件
+.env
+
+# 從 .env 自動生成的配置檔案
+config.js
+
+# 構建輸出（如果需要）
+dist/
+build/
+
+# Node modules
+node_modules/
+
+# 編輯器設定
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 作業系統檔案
+.DS_Store
+Thumbs.db
+

@@ -1,0 +1,20 @@
+---
+alwaysApply: true
+---
+# 🔧 Technical Details
+
+_This document contains all technical decisions and implementation details._
+
+## 💻 Technology Stack
+
+### Frontend
+
+- Use HTML, CSS, Javascript only.
+
+### Backend
+
+- No Backend
+
+### Database
+
+- Use Google Sheet as database

@@ -1,0 +1,14 @@
+{
+  "name": "mm-10-years-page",
+  "version": "1.0.0",
+  "description": "MacroMicro 十週年活動頁",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js && npx http-server . -p 8085"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "dependencies": {}
+}
+

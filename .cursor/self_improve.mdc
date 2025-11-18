@@ -1,0 +1,58 @@
+---
+alwaysApply: true
+---
+
+---
+description: "Continuously monitor and improve Cursor rules based on emerging code patterns"
+globs: "**/*"
+alwaysApply: true
+---
+
+## Rule Improvement Triggers
+- **New code patterns** not covered by existing rules
+- **Repeated implementations** across 3+ files
+- **Common error patterns** that could be prevented
+- **New libraries/tools** being used consistently
+- **Emerging best practices** in the codebase
+
+## When to Update Rules
+
+### Add New Rules When:
+- A new technology/pattern is used in 3+ files
+- Common bugs could be prevented by a rule
+- Code reviews repeatedly mention the same feedback
+- New security or performance patterns emerge
+
+### Modify Existing Rules When:
+- Better examples exist in the codebase
+- Additional edge cases are discovered
+- Related rules have been updated
+- Implementation details have changed
+
+## Rule Quality Assurance
+- Rules should be **actionable and specific**
+- Examples should come from **actual code**
+- References should be **up to date**
+- Patterns should be **consistently enforced**
+- Cross-reference related rules
+
+## Continuous Improvement Process
+- **Monitor** code review comments
+- **Track** common development questions
+- **Update** rules after major refactors
+- **Add** links to relevant documentation
+- **Maintain** links between related rules
+
+## Rule Deprecation
+- **Mark** outdated patterns as deprecated
+- **Remove** rules that no longer apply
+- **Update** references to deprecated rules
+- **Document** migration paths for old patterns
+
+## Documentation Maintenance
+- Keep examples synchronized with code
+- Update references to external docs
+- Maintain links between related rules
+- Document breaking changes
+
+Follow [rule_management.mdc](mdc:.cursor/rules/rule_management.mdc) for proper rule formatting and structure.

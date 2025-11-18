@@ -1,0 +1,100 @@
+# 📋 Project Context
+
+*This document contains permanent project information that doesn't change frequently.*
+
+## 🎯 Project Overview
+
+### Project Name
+
+MacroMicro 十週年品牌活動（MM 10y）Event Page 與行銷專案
+
+### Problem Statement
+
+- 現況：品牌價值與陪伴用戶十年的故事分散在多渠道，缺乏統一承載的體驗與轉換動線。
+- 痛點：用戶對品牌長期價值感知不足，內容互動與訂閱轉換間缺少強連結。
+- 要解決的問題：以單一 Event Page 整合品牌故事、用戶口碑、互動遊戲與限時優惠，提升觸達、互動與轉換。
+
+### Vision
+
+- 以「十年數據力，讓世界看懂經濟」為核心，建立可持續複用的活動頁模組與追蹤規範。
+- 成為品牌年度敘事與成效檢視的標準載體，兼顧 2C 與 2B 的訂閱成長。
+
+## 👥 Users & Stakeholders
+
+### Primary Users
+
+- 2C 投資與商業讀者（Free、PRO、Prime、MAX 既有與潛在用戶）
+- 2B 企業客戶與商務決策者（Biz）
+
+### User Needs
+
+- 快速理解品牌十年的專業積累與可信度
+- 輕鬆瀏覽精選用戶回饋與品牌里程碑
+- 有趣低門檻的互動（問答測驗）與明確的優惠誘因
+- 清晰、可信且低摩擦的訂閱導流
+
+### Stakeholders
+
+- 行銷與品牌團隊
+- 產品與設計（UX/UI、設計系統）
+- 前端與後端工程
+- 分析與資料（GA4、Looker）
+- 客服與社群
+
+## 📊 Business Requirements
+
+### Core Features
+
+- Event Page（RWD：Desktop/Tablet/Mobile）
+- 品牌故事 Timeline（橫向滑動，節點展開夥伴留言）
+- 用戶留言 Testimonial（自動輪播＋手動滑動＋外部回饋表單 CTA）
+- 互動問答（MM 粉絲大挑戰）：開始測驗 CTA、完成後引導訂閱與贈禮
+- 訂閱與促銷模組：倒數條/限時標籤、主要 CTA 導流訂閱/結帳
+- 影片播放模組（Hero 區 180s 品牌影片）
+- GA4 事件追蹤完整規格與 Debug 檢核
+
+### Success Metrics
+
+- 觸達：Event Page PV、影片觀看數
+- 互動：測驗開始與完成率、Testimonial 互動率、留言表單提交數
+- 轉換：新增訂閱數、CTA 轉換率、不同方案與來源的轉換歸因
+- 品牌參與：用戶留言/UGC 數、社群 hashtag 量級
+
+### Constraints
+
+- 時程：Kick-off 2025/10/16、v1.0 驗收 11/06、正式上線 11/25
+- 預算：以既有設計系統與模組優先，降低新資產製作成本
+- 技術：需相容現有前端框架、訂閱與金流串接；GA4 命名規範需沿用
+- 合規：外部表單、隱私與條款連結需完整
+
+## 🎨 Product Requirements
+
+### User Experience Goals
+
+- 清楚、可信、低摩擦的資訊架構
+- 互動自然，重要 CTA 重複且不打擾
+- 在不同裝置上均維持一致可讀性與操作性
+
+### Brand/Design Guidelines
+
+- 風格：專業、清晰、有溫度
+- 色彩：品牌主色 #7DE0C3，輔助灰階 #BBBCBD，十週年可加金色或深藍點題
+- 排版：Desktop 12 欄／Tablet 8 欄／Mobile 單欄；區塊留白 64–96px
+- 字體：中文「源樣黑體」、英文 Helvetica；行距 1.5 倍
+- 低保真灰階 Wireframe，明確標註圖片、文字、CTA
+- 元件與區塊命名採 kebab-case，並配置 data-analytics-id
+
+### Accessibility Requirements
+
+- 鍵盤可操作與 :focus 樣式可見
+- 圖片/圖示 alt 或 aria-label 完整，裝飾圖 aria-hidden
+- 顏色對比達標，hover 不只依賴顏色差異
+- 輪播可暫停/減速以利閱讀
+
+## 🔗 External Dependencies
+
+- 外部回饋表單服務（留言 CTA 連結）
+- 金流與訂閱系統（NewebPay/UnionPay/PayPal 等）與方案規則
+- GA4 與 DebugView、Looker 報表
+- 社群平台素材與影片託管（YouTube / Meta）
+- 既有設計系統與訂閱頁模組資產

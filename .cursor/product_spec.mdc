@@ -1,0 +1,132 @@
+---
+alwaysApply: true
+---
+# 網站規格
+
+請建立一個 RWD 響應式「MacroMicro 品牌十週年」的 Event Page，並參照此頁面 [https://crumb-used-83277298.figma.site](https://crumb-used-83277298.figma.site/) 的設計細節，並遵循 MacroMicro 頁面模組結構與設計系統：
+
+【整體風格】
+
+- 保留 MacroMicro 品牌基調：專業、清晰、有溫度。
+- 色彩遵循品牌主色 C58 M0 Y38 K0（#7DE0C3, MacroMicro teal）及輔助灰階 C31 M24 Y22 K0（#BBBCBD）。
+- 主體結構採 Desktop 12 欄／Tablet 8 欄／Mobile 單欄格線，區塊上下留白 64px（Desktop 可擴增至 96px）。
+- 字體：中文使用「源樣黑體」、英文使用 Helvetica。
+- 主標題大字體（32px–48px），副標題與正文使用中等字體大小（14px–18px），並確保適當行距（1.5 倍）以提高可讀性。
+- Logo 使用黑色或反白標準版本，不變形、不壓縮。
+- 版面調性與 https://www.macromicro.me/ 相同：整齊模組化、視覺焦點聚於 CTA 按鈕、數據與內容兼具。
+- 全站以灰階低保真 Wireframe 呈現，明確標註圖片區、文字區、CTA 按鈕位置。
+    
+    
+
+【頁面結構自上而下】
+
+1️⃣ Hero 區
+
+- 背景留空灰階框，代表視覺主圖。
+
+2️⃣ 品牌故事 Timeline（時間軸）
+
+- 標題：「MacroMicro 十年成長」。
+- 橫向時間軸，可橫向捲動，節點項目緩緩從右向左滑動。
+- 一次顯示 3–5 個年份節點，總共有 10–15 個年份節點。
+- 每個節點包含年份、事件簡述與圖示。
+    - 節點點擊後，展開 MacroMicro 夥伴留言內容。
+
+3️⃣ 互動問答（MM 粉絲大挑戰）
+
+- 區塊標題保留行銷語：「MM 粉絲大挑戰」。
+- 左側插畫位置、右側文字區。
+- 主要 CTA 按鈕：「開始測驗」，副文案：「完成測驗拿神秘小禮物」。
+
+4️⃣ 用戶留言（Testimonial）
+
+- 標題：「用戶真實回饋」。
+- 留言卡片僅呈現留言內容和會員名稱，總共有 30 多則留言。
+- 分上下兩行交錯顯示，一行顯示 1–3 張留言卡片。上下行左右對齊錯開。
+- 採橫向滑動（含自動輪播），視覺風格與 MacroMicro Pro/Prime 一致。
+- 每隔 10 秒，自動向右輪播。第一排和第二排錯開 5 秒捲動。
+- 一個表單，可輸入會員名稱、Email、以及留言內容。
+    - 當點擊送出按鈕後：
+        - Popup 提示：「感謝你的回饋留言！」
+        - 填寫內容後可以即時於上方第一排最左側，顯示一張留言卡片。
+        - 關閉 Popup 後，自動捲動到最左側讓使用者能看到他的留言。
+
+5️⃣ 訂閱與促銷
+
+- 標題：「十週年限時優惠」。
+- 一段文字簡述。
+- 三張卡片左到右呈現各項活動內容。
+    - 卡片內容呈現用 icon + 標題 + 三項條列活動介紹文案。
+    - 第一張卡片：課程折價，購課輸入優惠碼現折 $500 元。
+    - 第二張卡片：買年送用，期間訂閱成為年繳用戶，於活動結束後加贈一個月訂閱期長。
+    - 第三張卡片：待訂內容。
+- CTA 按鈕文字置中。
+
+6️⃣ Footer
+
+- 比照 MacroMicro Footer 呈現。
+    
+    
+
+【風格與互動】
+
+- 採 MacroMicro 訂閱頁面式模組結構，文字與 CTA 按鈕對齊嚴謹。
+- 區塊上下留白 64px，區塊邊界分明。
+- CTA 按鈕採品牌主色或灰階高亮。
+- 元件命名標準化（kebab-case）：hero-section, timeline-section, testimonial-section, quiz-section, offer-section, footer-section。
+- 按鈕 hover：亮度 +10%、陰影增加。
+- Timeline（時間軸） hover：節點放大與 tooltip 顯示文字。
+- 影片播放按鈕 hover：外圈淡色漸變。
+    
+    
+
+【RWD 響應式設計設定】
+
+📱 Mobile（≤ 768px）
+
+- 採單欄直向排列，Hero 區主標題置頂、CTA 按鈕置中。
+- Timeline（時間軸）改為垂直排列（年份由上到下），限制顯示範圍，一次顯示 2–3 個，範圍內可捲動查看。
+- 用戶留言為橫向滑動，主要的留言卡片置於畫面正中央（1.2 張／頁）。
+- Footer 元件上下堆疊，字體縮小至 14px。
+
+💻 Tablet（769–1200px）
+
+- 採 8 欄格線，左右邊距縮減為 32px。
+- Hero 區主標題置左，右側保留主圖。
+- Timeline（時間軸）同 Desktop 版本呈現。
+
+🖥 Desktop（≥ 1200px）
+
+- 採 12 欄格線，全寬排版，版心寬度 1200px（視覺可全寬延展）。
+- 區塊留白 64px–96px。
+- Hero 區主標題與視覺左右分欄對齊。
+- 用戶留言為橫向動畫滑動，不限制左右顯示範圍，讓該區塊左右滿版呈現。標題與下方按鈕置中。用戶留言的表單，限制顯示範圍在中間 600px 寬。
+- Timeline（時間軸）為橫向動畫滑動，不限制左右顯示範圍，讓該區塊左右滿版呈現。標題與下方按鈕置中。時間軸不要有左右切換顯示的按鈕，自動左到右慢速無限循環的捲動。
+- CTA 按鈕與 Footer 採三欄或左右佈局。
+
+輸出：獨立 Event Page，含三版 RWD（Desktop／Tablet／Mobile），純 html+css+js 架構。
+
+### 元件 ID 命名規則
+
+- 命名格式：kebab-case，語義優先，從大到小（區塊 → 元件 → 元件狀態）。
+- 區塊前綴：sec-（section）
+- 元件前綴：btn-（button）、link-、card-、chip-、tag-、icon-、img-、inp-（input）、ddl-（dropdown）、tab-、ply-（player）
+- 清單與子項：list-、item-（可附序號 item-01、item-02）
+- 變體與狀態：--primary、--ghost、--disabled、--active、--hover、--focus
+- RWD 斷點附註（僅在必要時）：@desktop、@tablet、@mobile（註解或 data-attr，不進 GA4 事件）
+- 事件追蹤屬性：data-analytics-id 與 data-analytics-text，優先以 data-analytics-id 上報
+
+範例
+
+- sec-hero、btn-hero-cta--primary
+- sec-timeline、btn-timeline-prev、btn-timeline-next、item-timeline-2019
+- sec-testimonial、card-testimonial-item-03
+- sec-quiz、btn-quiz-start、link-quiz-rules
+- sec-offer、btn-offer-cta、tag-offer-countdown
+- sec-footer、link-footer-privacy、link-footer-terms
+
+ID 規則補充
+
+- 同頁唯一：相同語義的重複元素以序號區分，例如 card-testimonial-item-01。
+- 可讀性：避免縮寫過度，保留關鍵詞（timeline、testimonial、offer 等）。
+- 可溯源：CTA 一律加上 data-analytics-id，例如 data-analytics-id="btn-offer-cta"。
