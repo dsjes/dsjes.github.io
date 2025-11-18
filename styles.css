@@ -573,7 +573,7 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     width: 100%;
   }
   .quiz-visual {
-    padding-bottom: 135%; /* 增加高度，避免 iframe 被截斷 */
+    padding-bottom: 200%; /* 增加高度，避免 iframe 被截斷 */
   }
   .quiz-copy {
     padding-left: 0;
