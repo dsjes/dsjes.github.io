@@ -255,19 +255,29 @@ h2 {
   display: block;
 }
 .quiz-visual {
+  --quiz-visual-aspect: 4 / 3;
+  --quiz-visual-padding: 75%;
+  --quiz-visual-max-width: 44rem;
   position: relative;
   width: 100%;
-  padding-bottom: 85%; /* 增加高度避免 iframe 被裁掉 */
-  height: 0;
+  max-width: var(--quiz-visual-max-width);
   overflow: hidden;
+  aspect-ratio: var(--quiz-visual-aspect);
+  border-radius: var(--radius-sm);
+  background: #000;
 }
 .quiz-visual iframe {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: none;
+}
+@supports not (aspect-ratio: 1 / 1) {
+  .quiz-visual {
+    height: 0;
+    padding-bottom: var(--quiz-visual-padding);
+  }
 }
 
 /* Testimonial */
@@ -487,15 +497,21 @@ textarea.inp { min-height: 4rem; resize: vertical; }
   :root {
     --content-padding: 1rem; /* Mobile 版本使用較小的 padding */
   }
-  html { font-size: 15px; }
+  html { font-size: 17px; }
   body {
+    font-size: 1.0625rem;
     background-size: 100% auto;
   }
   .wf-hero-img, .wf-illust { min-height: 8rem;}
-  .section-title { font-size: 1.5rem; }
+  .section-title { font-size: 1.75rem; }
+  .section-description,
+  .lunch-event-description,
+  .offer-description {
+    font-size: 1.0625rem;
+  }
 
-  .hero-title { font-size: 2rem; }
-  .hero-subtitle { font-size: 1rem; display: inline; }
+  .hero-title { font-size: 2.35rem; }
+  .hero-subtitle { font-size: 1.2rem; display: inline; }
   .hero-section .banner {
     min-height: auto;
     display: flex;
@@ -551,12 +567,13 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     padding-right: 1rem;
   }
   .timeline-item { 
-    min-width: calc((100vw - 2.5rem) / 1.8);
-    max-width: calc((100vw - 2.5rem) / 1.8);
+    min-width: clamp(8rem, 45vw, 12rem);
+    max-width: clamp(8rem, 45vw, 12rem);
     flex-shrink: 0;
   }
   .timeline-item-container {
-    width: 100%;
+    width: 85%;
+    margin: 0 auto;
     height: auto;
     aspect-ratio: 1 / 1;
   }
@@ -573,10 +590,26 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     width: 100%;
   }
   .quiz-visual {
-    padding-bottom: 200%; /* 增加高度，避免 iframe 被截斷 */
+    --quiz-visual-aspect: 3 / 4;
+    --quiz-visual-padding: 133.33%;
+    --quiz-visual-max-width: 28rem;
+    margin-inline: auto;
+  }
+  .quiz-copy {
+    max-width: 30rem;
+    margin-inline: auto;
+    align-items: stretch;
   }
   .quiz-copy {
     padding-left: 0;
+    min-width: 5rem;
+  }
+  #btn-testimonial-to-course {
+    align-self: center;
+    width: min(14rem, 80%);
+    min-width: 5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
   }
   #sec-quiz .container {
     padding-left: 1.5rem;
@@ -597,11 +630,21 @@ textarea.inp { min-height: 4rem; resize: vertical; }
   }
 }
 
+@media (max-width: 47.999rem) and (orientation: landscape) {
+  .quiz-visual {
+    --quiz-visual-aspect: 9 / 16;
+    --quiz-visual-padding: 56.25%;
+  }
+}
+
 /* Tablet / iPad (>= 48rem / 768px) */
 @media (min-width: 48rem) {
   .carousel { overflow: hidden;}
   .quiz-visual {
-    padding-bottom: 72%; /* 平板版增加高度避免 iframe 被裁掉 */
+    --quiz-visual-aspect: 7 / 8;
+    --quiz-visual-padding: 72%;
+    --quiz-visual-max-width: 36rem;
+    margin-inline: 0;
   }
   /* 平板版也使用上下排列，與手機版相同 */
   .testimonial-form-container {
@@ -692,7 +735,9 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     padding-bottom: 9rem;
   }
   .quiz-visual {
-    padding-bottom: 70%; /* 桌面版增加高度避免 iframe 被裁掉 */
+    --quiz-visual-aspect: 7 / 10;
+    --quiz-visual-padding: 70%;
+    --quiz-visual-max-width: 44rem;
   }
   .hero-section {
     --container-max: 150rem; /* 桌面版本增加寬度到 2400px */
@@ -981,12 +1026,11 @@ textarea.inp { min-height: 4rem; resize: vertical; }
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
 }
-
-/* 統一所有「了解更多」按鈕的寬度 */
 #btn-testimonial-to-course {
+  width: auto;
   min-width: 10rem;
-  padding: 0.6rem 1.25rem;
-  font-size: 0.9rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
 }
 
 /* Offer Footer - Logo */
@@ -1045,11 +1089,6 @@ textarea.inp { min-height: 4rem; resize: vertical; }
   .offer-logo {
     height: 2.5rem;
   }
-  #btn-testimonial-to-course {
-    min-width: 5rem;
-    padding: 0.6rem 1.25rem;
-    font-size: 0.9rem;
-  }
   .testimonial-form .btn {
     padding: 0.6rem 1.25rem;
     font-size: 0.9rem;
@@ -1090,11 +1129,6 @@ textarea.inp { min-height: 4rem; resize: vertical; }
   
   .offer-logo {
     height: 3rem;
-  }
-  #btn-testimonial-to-course {
-    min-width: 5rem;
-    padding: 0.6rem 1.25rem;
-    font-size: 0.9rem;
   }
   .testimonial-form .btn {
     padding: 0.6rem 1.25rem;
