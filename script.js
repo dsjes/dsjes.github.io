@@ -67,11 +67,18 @@
     const apiKey = cfg.apiKey;
     const spreadsheetId = cfg.spreadsheetId;
     const range = cfg.timelineRange || '大事紀!C:G';
-    const sheetsApiEndpoint = cfg.sheetsApiEndpoint || 'https://sheets.googleapis.com/v4/spreadsheets';
+    const sheetsApiEndpoint = cfg.sheetsApiEndpoint
+    const timelineApiKey = cfg.timelineApiKey || cfg.KEY_FOR_MM_10_YEARS_EVENT_PAGE;
     if (!apiKey || !spreadsheetId) return [];
-    const url = `${sheetsApiEndpoint}/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(range)}?key=${encodeURIComponent(apiKey)}`;
+    const url = `${sheetsApiEndpoint}/event`;
     try {
-      const res = await fetch(url, { cache: 'no-store' });
+      const fetchOptions = { cache: 'no-store' };
+      if (timelineApiKey) {
+        fetchOptions.headers = {
+          'x-api-key': timelineApiKey
+        };
+      }
+      const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
       const json = await res.json();
       const values = (json && Array.isArray(json.values)) ? json.values : [];
@@ -411,81 +418,67 @@
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
-  // 寫入留言到 Google Sheet (透過 Google Apps Script Web App)
+  // 寫入留言到 Google Sheet（透過自建後端 API）
   async function appendTestimonialToSheet(name, email, message){
     const cfg = window.MM_SHEET_CONFIG || {};
-    const appScriptUrl = cfg.appScriptUrl;
-    
-    // 如果沒有設定 Apps Script URL，則跳過寫入
-    if (!appScriptUrl) {
-      console.warn('[Sheets] appScriptUrl not configured, skipping write operation');
-      console.info('[Sheets] 如需寫入功能，請參考 GOOGLE_SHEETS_SETUP.md 設定 Google Apps Script Web App URL');
+    const sheetsApiEndpoint = cfg.sheetsApiEndpoint;
+    const timelineApiKey = cfg.timelineApiKey || cfg.KEY_FOR_MM_10_YEARS_EVENT_PAGE;
+
+    if (!sheetsApiEndpoint) {
+      console.warn('[Sheets] sheetsApiEndpoint not configured, skipping write operation');
       return false;
     }
-    
+
+    if (typeof message === 'string' && message.length > 1000) {
+      console.warn('[Sheets] message too long, skipping write operation');
+      return false;
+    }
+
+    const url = `${sheetsApiEndpoint}/user_comment`;
+    const rowData = [
+      '審核中',
+      message,
+      "",
+      name,
+      email,
+      getUTCP8Timestamp()
+    ];
+    const payload = { data: rowData };
+
     try {
-      // 使用 POST 方法，Content-Type 設為 text/plain 以避免 CORS 預檢請求
-      // 這是 Google Apps Script Web App 最可靠的方式
-      // 注意：Apps Script 會返回 302 重定向，fetch API 會自動跟隨
-      const response = await fetch(appScriptUrl, {
+      const fetchOptions = {
         method: 'POST',
-        mode: 'cors', // 使用 cors 模式以跟隨 302 重定向
+        cache: 'no-store',
         headers: {
-          'Content-Type': 'text/plain;charset=utf-8', // 使用 text/plain 避免 CORS 預檢請求
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          message: message,
-          timestamp: getUTCP8Timestamp()
-        }),
-        redirect: 'follow' // 明確指定跟隨 302 重定向
-      });
-      
-      // Google Apps Script 會先返回 302，然後重定向到實際執行 URL
-      // fetch API 會自動跟隨重定向，最終 response.status 應該是 200（如果成功）
-      // 或我們讀取回應內容來確認
-      try {
-        const result = await response.text();
-        console.log('[Sheets] Response received:', result);
-        
-        // 嘗試解析 JSON 回應（如果 Apps Script 有返回）
-        try {
-          const jsonResult = JSON.parse(result);
-          if (jsonResult.success) {
-            console.log('[Sheets] ✅ Testimonial submitted successfully');
-            return true;
-          }
-        } catch (e) {
-          // 如果不是 JSON，可能是 HTML 或其他格式（這是正常的）
-          console.log('[Sheets] Response is not JSON (this is normal for Apps Script)');
-        }
-        
-        // 如果狀態碼是 2xx，通常表示成功（即使是 302 重定向後）
-        if (response.status >= 200 && response.status < 300) {
-          console.log('[Sheets] ✅ Request completed with status:', response.status);
-          return true;
-        }
-        
-        // 302 本身不是錯誤，表示重定向正在進行（fetch 會自動跟隨）
-        if (response.status === 302 || response.redirected) {
-          console.log('[Sheets] ✅ Request redirected (normal for Apps Script), assuming success');
-          return true;
-        }
-        
-        console.warn('[Sheets] ⚠️ Unexpected response status:', response.status);
-        return true; // 仍然返回 true，讓流程繼續（資料可能已寫入）
-        
-      } catch (readError) {
-        // 無法讀取回應（可能是因為 CORS 或其他原因），但不影響寫入操作
-        console.warn('[Sheets] Could not read response, but request was sent:', readError);
-        // 假設成功（因為請求已經發送，Apps Script 通常會處理）
-        return true;
+        body: JSON.stringify(payload)
+      };
+      if (timelineApiKey) {
+        fetchOptions.headers['x-api-key'] = timelineApiKey;
       }
-      
+
+      const response = await fetch(url, fetchOptions);
+      if (!response.ok) {
+        console.warn('[Sheets] ⚠️ Failed to append testimonial:', response.status);
+        return false;
+      }
+
+      // 後端預期返回 JSON，若非 JSON 也視為成功
+      try {
+        const result = await response.json();
+        if (result && result.success === false) {
+          console.warn('[Sheets] ⚠️ Backend reported failure:', result);
+          return false;
+        }
+      } catch (_) {
+        // 如果不是 JSON，直接視為成功（例如回傳空字串）
+      }
+
+      console.log('[Sheets] ✅ Testimonial submitted successfully via backend');
+      return true;
     } catch (error) {
       console.error('[Sheets] ❌ Error submitting testimonial:', error);
-      // 即使寫入失敗，仍繼續顯示留言（不會影響使用者體驗）
       return false;
     }
   }
@@ -495,11 +488,18 @@
     const apiKey = cfg.apiKey;
     const spreadsheetId = cfg.spreadsheetId;
     const range = cfg.range || '用戶留言!C:Ff';
-    const sheetsApiEndpoint = cfg.sheetsApiEndpoint || 'https://sheets.googleapis.com/v4/spreadsheets';
+    const sheetsApiEndpoint = cfg.sheetsApiEndpoint
+    const timelineApiKey = cfg.timelineApiKey || cfg.KEY_FOR_MM_10_YEARS_EVENT_PAGE;
     if (!apiKey || !spreadsheetId) return [];
-    const url = `${sheetsApiEndpoint}/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(range)}?key=${encodeURIComponent(apiKey)}`;
+    const url = `${sheetsApiEndpoint}/user_comment`;
     try {
-      const res = await fetch(url, { cache: 'no-store' });
+      const fetchOptions = { cache: 'no-store' };
+      if (timelineApiKey) {
+        fetchOptions.headers = {
+          'x-api-key': timelineApiKey
+        };
+      }
+      const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
       const json = await res.json();
       const values = (json && Array.isArray(json.values)) ? json.values : [];
@@ -1058,11 +1058,18 @@
     const apiKey = cfg.apiKey;
     const spreadsheetId = cfg.spreadsheetId;
     const range = cfg.lunchEventsRange || '午餐直播連結!A:D';
-    const sheetsApiEndpoint = cfg.sheetsApiEndpoint || 'https://sheets.googleapis.com/v4/spreadsheets';
+    const sheetsApiEndpoint = cfg.sheetsApiEndpoint
+    const timelineApiKey = cfg.timelineApiKey || cfg.KEY_FOR_MM_10_YEARS_EVENT_PAGE;
     if (!apiKey || !spreadsheetId) return [];
-    const url = `${sheetsApiEndpoint}/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(range)}?key=${encodeURIComponent(apiKey)}`;
+    const url = `${sheetsApiEndpoint}/lunch_stream_url`;
     try {
-      const res = await fetch(url, { cache: 'no-store' });
+      const fetchOptions = { cache: 'no-store' };
+      if (timelineApiKey) {
+        fetchOptions.headers = {
+          'x-api-key': timelineApiKey
+        };
+      }
+      const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
       const json = await res.json();
       const values = (json && Array.isArray(json.values)) ? json.values : [];

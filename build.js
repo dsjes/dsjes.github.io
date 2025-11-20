@@ -9,7 +9,8 @@ const env = {
   RANGE: process.env.GOOGLE_SHEETS_RANGE || '用戶留言!C:F',
   TIMELINE_RANGE: process.env.GOOGLE_SHEETS_TIMELINE_RANGE || '大事紀!C:G',
   LUNCH_EVENTS_RANGE: process.env.GOOGLE_SHEETS_LUNCH_EVENTS_RANGE || '午餐直播連結!A:D',
-  APPSCRIPT_URL: process.env.GOOGLE_APPSCRIPT_URL || ''
+  APPSCRIPT_URL: process.env.GOOGLE_APPSCRIPT_URL || '',
+  KEY_FOR_MM_10_YEARS_EVENT_PAGE: process.env.KEY_FOR_MM_10_YEARS_EVENT_PAGE || ''
 };
 
 // 驗證必要的環境變數
@@ -47,7 +48,8 @@ window.MM_SHEET_CONFIG = {
   timelineRange: '${escapeJsString(env.TIMELINE_RANGE)}',   // 讀取範圍：年/月、事件標題、事件標題縮減版、事件描述、夥伴留言
   lunchEventsRange: '${escapeJsString(env.LUNCH_EVENTS_RANGE)}',   // 讀取範圍：日期、連結、按鈕顯示、嵌入 YT 影片
   appScriptUrl: "${escapeJsString(env.APPSCRIPT_URL)}",     // Google Apps Script Web App URL（用於寫入留言，請參考 GOOGLE_SHEETS_SETUP.md 設定）
-  sheetsApiEndpoint: 'https://sheets.googleapis.com/v4/spreadsheets',  // Google Sheets API 端點
+  sheetsApiEndpoint: "${escapeJsString(env.APPSCRIPT_URL)}",  // Google Sheets API 端點
+  timelineApiKey: '${escapeJsString(env.KEY_FOR_MM_10_YEARS_EVENT_PAGE)}',  // Timeline API 驗證用 Header 值
 };
 `;
 
