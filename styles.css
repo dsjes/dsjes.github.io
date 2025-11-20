@@ -735,7 +735,7 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     padding-bottom: 9rem;
   }
   .quiz-visual {
-    --quiz-visual-aspect: 7 / 10;
+    --quiz-visual-aspect: 1 / 1;
     --quiz-visual-padding: 70%;
     --quiz-visual-max-width: 44rem;
   }
