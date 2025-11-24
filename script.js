@@ -76,8 +76,11 @@
         cache: 'no-store',
         headers: {}
       };
-      if (timelineApiKey) {
+      if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
+        console.log('[Timeline API] x-api-key header added');
+      } else {
+        console.warn('[Timeline API] timelineApiKey is missing or empty:', timelineApiKey);
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
@@ -455,8 +458,11 @@
         },
         body: JSON.stringify(payload)
       };
-      if (timelineApiKey) {
+      if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
+        console.log('[Append Testimonial] x-api-key header added');
+      } else {
+        console.warn('[Append Testimonial] timelineApiKey is missing or empty:', timelineApiKey);
       }
 
       const response = await fetch(url, fetchOptions);
@@ -498,8 +504,11 @@
         cache: 'no-store',
         headers: {}
       };
-      if (timelineApiKey) {
+      if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
+        console.log('[User Comment API] x-api-key header added');
+      } else {
+        console.warn('[User Comment API] timelineApiKey is missing or empty:', timelineApiKey);
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
@@ -1069,8 +1078,11 @@
         cache: 'no-store',
         headers: {}
       };
-      if (timelineApiKey) {
+      if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
+        console.log('[Lunch Stream API] x-api-key header added');
+      } else {
+        console.warn('[Lunch Stream API] timelineApiKey is missing or empty:', timelineApiKey);
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];

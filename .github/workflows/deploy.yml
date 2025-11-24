@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-      - master
-  workflow_dispatch:
+  workflow_dispatch: # 允許手動觸發
 
 permissions:
   contents: read
@@ -26,14 +25,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '18'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build config.js
         env:
+
+          GOOGLE_SHEETS_TIMELINE_RANGE: ${{ secrets.GOOGLE_SHEETS_TIMELINE_RANGE }}
+          GOOGLE_SHEETS_LUNCH_EVENTS_RANGE: ${{ secrets.GOOGLE_SHEETS_LUNCH_EVENTS_RANGE }}
           GOOGLE_APPSCRIPT_URL: ${{ secrets.GOOGLE_APPSCRIPT_URL }}
           KEY_FOR_MM_10_YEARS_EVENT_PAGE: ${{ secrets.KEY_FOR_MM_10_YEARS_EVENT_PAGE }}
         run: npm run build
@@ -56,3 +58,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+

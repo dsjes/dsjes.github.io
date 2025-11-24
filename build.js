@@ -2,15 +2,20 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-// 讀取環境變數
+// 讀取環境變數並去除首尾空白
+function getEnv(key, defaultValue = '') {
+  const value = process.env[key] || defaultValue;
+  return String(value).trim();
+}
+
 const env = {
-  API_KEY: process.env.GOOGLE_SHEETS_API_KEY || '',
-  SPREADSHEET_ID: process.env.GOOGLE_SHEETS_SPREADSHEET_ID || '',
-  RANGE: process.env.GOOGLE_SHEETS_RANGE || '用戶留言!C:F',
-  TIMELINE_RANGE: process.env.GOOGLE_SHEETS_TIMELINE_RANGE || '大事紀!C:G',
-  LUNCH_EVENTS_RANGE: process.env.GOOGLE_SHEETS_LUNCH_EVENTS_RANGE || '午餐直播連結!A:D',
-  APPSCRIPT_URL: process.env.GOOGLE_APPSCRIPT_URL || '',
-  KEY_FOR_MM_10_YEARS_EVENT_PAGE: process.env.KEY_FOR_MM_10_YEARS_EVENT_PAGE || ''
+  API_KEY: getEnv('GOOGLE_SHEETS_API_KEY', ''),
+  SPREADSHEET_ID: getEnv('GOOGLE_SHEETS_SPREADSHEET_ID', ''),
+  RANGE: getEnv('GOOGLE_SHEETS_RANGE', '用戶留言!C:F'),
+  TIMELINE_RANGE: getEnv('GOOGLE_SHEETS_TIMELINE_RANGE', '大事紀!C:G'),
+  LUNCH_EVENTS_RANGE: getEnv('GOOGLE_SHEETS_LUNCH_EVENTS_RANGE', '午餐直播連結!A:D'),
+  APPSCRIPT_URL: getEnv('GOOGLE_APPSCRIPT_URL', ''),
+  KEY_FOR_MM_10_YEARS_EVENT_PAGE: getEnv('KEY_FOR_MM_10_YEARS_EVENT_PAGE', '')
 };
 
 // 驗證必要的環境變數
@@ -21,6 +26,11 @@ if (missingVars.length > 0) {
   console.error('❌ 缺少必要的環境變數:', missingVars.join(', '));
   console.error('請確認 .env 檔案已正確設定');
   process.exit(1);
+}
+
+// 警告缺少可選但重要的環境變數
+if (!env.KEY_FOR_MM_10_YEARS_EVENT_PAGE) {
+  console.warn('⚠️  警告: KEY_FOR_MM_10_YEARS_EVENT_PAGE 未設置，API 請求將不會包含 x-api-key header');
 }
 
 console.log('✅ 環境變數載入成功');
