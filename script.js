@@ -72,11 +72,12 @@
     if (!apiKey || !spreadsheetId) return [];
     const url = `${sheetsApiEndpoint}/event`;
     try {
-      const fetchOptions = { cache: 'no-store' };
+      const fetchOptions = { 
+        cache: 'no-store',
+        headers: {}
+      };
       if (timelineApiKey) {
-        fetchOptions.headers = {
-          'x-api-key': timelineApiKey
-        };
+        fetchOptions.headers['x-api-key'] = timelineApiKey;
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
@@ -493,11 +494,12 @@
     if (!apiKey || !spreadsheetId) return [];
     const url = `${sheetsApiEndpoint}/user_comment`;
     try {
-      const fetchOptions = { cache: 'no-store' };
+      const fetchOptions = { 
+        cache: 'no-store',
+        headers: {}
+      };
       if (timelineApiKey) {
-        fetchOptions.headers = {
-          'x-api-key': timelineApiKey
-        };
+        fetchOptions.headers['x-api-key'] = timelineApiKey;
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
@@ -1063,11 +1065,12 @@
     if (!apiKey || !spreadsheetId) return [];
     const url = `${sheetsApiEndpoint}/lunch_stream_url`;
     try {
-      const fetchOptions = { cache: 'no-store' };
+      const fetchOptions = { 
+        cache: 'no-store',
+        headers: {}
+      };
       if (timelineApiKey) {
-        fetchOptions.headers = {
-          'x-api-key': timelineApiKey
-        };
+        fetchOptions.headers['x-api-key'] = timelineApiKey;
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
