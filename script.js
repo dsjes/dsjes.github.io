@@ -24,7 +24,11 @@
     const last = debounceMap.get(key) || 0;
     if (now - last < DEBOUNCE_MS) return; // debounce
     debounceMap.set(key, now);
-    // Placeholder: integrate with GA4 gtag or dataLayer
+    
+    // 整合 GA4 gtag 實際發送事件
+    if (typeof gtag !== 'undefined') {
+      gtag('event', eventName, params || {});
+    }
   }
   window.MMAnalytics = { track };
 
@@ -53,9 +57,20 @@
 
   // Hero
   bindCTA('#btn-hero-cta--primary, #ply-hero-video');
-  document.getElementById('ply-hero-video')?.addEventListener('click', function(){
-    track('video_play', { element_id: 'ply-hero-video', section: 'hero' });
-  });
+  // Hero 影片點擊追蹤 - click_10y_herov
+  // 在 iframe 的容器元素上添加點擊監聽（因為跨域 iframe 無法直接監聽點擊）
+  const heroVisual = document.querySelector('#sec-hero .hero-visual');
+  if (heroVisual) {
+    // 在包含 iframe 的容器 div 上添加點擊監聽
+    // iframe 的包裝 div（有 padding 的那個）用於追蹤點擊
+    const iframeContainer = heroVisual.querySelector('div[style*="padding"]');
+    if (iframeContainer) {
+      iframeContainer.addEventListener('click', function(e) {
+        // 點擊容器區域（即 iframe 區域）時追蹤
+        track('click_10y_herov', { element_id: 'hero-video-iframe', section: 'hero' });
+      });
+    }
+  }
 
   // Timeline interactions
   const timelineViewport = document.getElementById('list-timeline');
@@ -245,6 +260,9 @@
     
     // 點擊事件：開啟 modal，顯示該年度的所有事件
     item.addEventListener('click', function(){
+      // 追蹤 Timeline 年度點擊 - click_10y_mem_XX
+      const eventName = `click_10y_mem_${year.substring(2)}`; // 例如 2015 -> click_10y_mem_15
+      track(eventName, { year: year, element_id: `timeline-${year}`, section: 'timeline' });
       openTimelineYearEvents(year, yearEvents);
     });
     item.addEventListener('keydown', function(e){
@@ -704,7 +722,11 @@
       <div class="name">｜${t.name}</div>
     </div>
   `;
-    card.addEventListener('click', function(){ openTestimonialFull(t.text, t.name, card.id); });
+    card.addEventListener('click', function(){ 
+      // 追蹤留言卡片點擊 - click_10y_msgop
+      track('click_10y_msgop', { element_id: card.id, section: 'testimonial' });
+      openTestimonialFull(t.text, t.name, card.id); 
+    });
     card.addEventListener('keydown', function(e){
       if (e.key === 'Enter' || e.key === ' '){
         e.preventDefault();
@@ -955,7 +977,21 @@
     }, 150);
   });
 
-  // Offer CTA
+  // Offer CTA - 活動三部曲按鈕追蹤
+  document.querySelectorAll('.offer-btn[data-ga-event]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const eventName = btn.getAttribute('data-ga-event');
+      if (eventName) {
+        track(eventName, { element_id: btn.id || 'offer-btn', section: 'offer', href: btn.href });
+      }
+    });
+  });
+  
+  // Footer Logo 追蹤 - click_10y_ft_home
+  document.querySelector('a[data-ga-event="click_10y_ft_home"]')?.addEventListener('click', function(){
+    track('click_10y_ft_home', { element_id: 'btn-logo-link', section: 'footer' });
+  });
+  
   bindCTA('.btn-offer');
 
   // Countdown tag
@@ -1196,12 +1232,34 @@
       // 如果有連結，點擊時導向連結
       if (event.link && event.showButton){
         button.addEventListener('click', function(){
+          // 根據日期確定事件名稱
+          // 匹配格式：11月25日、11 月 25 日、2025年11月25日 等
+          let eventName = '';
+          const dateText = event.date.replace(/\s+/g, ''); // 移除所有空格便於匹配
+          
+          // 使用正則表達式匹配日期模式
+          if (/11.*25|25.*11/.test(dateText)) {
+            eventName = 'click_10y_stream1125';
+          } else if (/12.*02|02.*12/.test(dateText)) {
+            eventName = 'click_10y_stream1202';
+          } else if (/12.*09|09.*12/.test(dateText)) {
+            eventName = 'click_10y_stream1209';
+          } else if (/12.*23|23.*12/.test(dateText)) {
+            eventName = 'click_10y_stream1223';
+          } else if (/12.*30|30.*12/.test(dateText)) {
+            eventName = 'click_10y_stream1230';
+          } else if (/01.*06|06.*01|2026.*01.*06/.test(dateText)) {
+            eventName = 'click_10y_stream0106';
+          }
+          
+          if (eventName) {
+            track(eventName, { date: event.date, link: event.link, section: 'lunch-event' });
+          } else {
+            // 如果無法匹配，使用通用事件名稱（作為備援）
+            track('lunch_event_click', { date: event.date, link: event.link, section: 'lunch-event' });
+          }
+          
           window.open(event.link, '_blank', 'noopener,noreferrer');
-          track('lunch_event_click', { 
-            date: event.date, 
-            link: event.link, 
-            section: 'lunch-event' 
-          });
         });
       } else {
         // 如果沒有連結或按鈕不顯示，禁用按鈕
