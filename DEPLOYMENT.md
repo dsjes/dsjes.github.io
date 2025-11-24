@@ -8,8 +8,16 @@
 
 在 GitHub 倉庫中設置以下 Secrets（Settings > Secrets and variables > Actions > New repository secret）：
 
-1. **GOOGLE_APPSCRIPT_URL** - API URL
-2. **KEY_FOR_MM_10_YEARS_EVENT_PAGE** - Timeline API 驗證用 Header 值（**重要：必須設置，否則 API 請求不會包含 x-api-key**）
+**必要的 Secrets：**
+1. **GOOGLE_SHEETS_API_KEY** - Google Sheets API 金鑰（用於讀取）
+2. **GOOGLE_SHEETS_SPREADSHEET_ID** - Google Sheets 試算表 ID
+3. **GOOGLE_APPSCRIPT_URL** - Google Apps Script Web App URL
+4. **KEY_FOR_MM_10_YEARS_EVENT_PAGE** - Timeline API 驗證用 Header 值（**重要：必須設置，否則 API 請求不會包含 x-api-key**）
+
+**可選的 Secrets（如果使用預設值可省略）：**
+5. **GOOGLE_SHEETS_RANGE** - 用戶留言讀取範圍（預設：`用戶留言!C:F`）
+6. **GOOGLE_SHEETS_TIMELINE_RANGE** - 大事紀讀取範圍（預設：`大事紀!C:G`）
+7. **GOOGLE_SHEETS_LUNCH_EVENTS_RANGE** - 午餐直播連結讀取範圍（預設：`午餐直播連結!A:D`）
 
 ### 部署流程
 

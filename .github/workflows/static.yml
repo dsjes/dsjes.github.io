@@ -34,6 +34,11 @@ jobs:
 
       - name: Build
         env:
+          GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
+          GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
+          GOOGLE_SHEETS_RANGE: ${{ secrets.GOOGLE_SHEETS_RANGE }}
+          GOOGLE_SHEETS_TIMELINE_RANGE: ${{ secrets.GOOGLE_SHEETS_TIMELINE_RANGE }}
+          GOOGLE_SHEETS_LUNCH_EVENTS_RANGE: ${{ secrets.GOOGLE_SHEETS_LUNCH_EVENTS_RANGE }}
           GOOGLE_APPSCRIPT_URL: ${{ secrets.GOOGLE_APPSCRIPT_URL }}
           KEY_FOR_MM_10_YEARS_EVENT_PAGE: ${{ secrets.KEY_FOR_MM_10_YEARS_EVENT_PAGE }}
         run: npm run build

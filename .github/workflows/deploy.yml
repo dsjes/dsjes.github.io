@@ -33,7 +33,9 @@ jobs:
 
       - name: Build config.js
         env:
-
+          GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
+          GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
+          GOOGLE_SHEETS_RANGE: ${{ secrets.GOOGLE_SHEETS_RANGE }}
           GOOGLE_SHEETS_TIMELINE_RANGE: ${{ secrets.GOOGLE_SHEETS_TIMELINE_RANGE }}
           GOOGLE_SHEETS_LUNCH_EVENTS_RANGE: ${{ secrets.GOOGLE_SHEETS_LUNCH_EVENTS_RANGE }}
           GOOGLE_APPSCRIPT_URL: ${{ secrets.GOOGLE_APPSCRIPT_URL }}
