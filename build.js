@@ -33,8 +33,6 @@ if (!env.KEY_FOR_MM_10_YEARS_EVENT_PAGE) {
   console.warn('⚠️  警告: KEY_FOR_MM_10_YEARS_EVENT_PAGE 未設置，API 請求將不會包含 x-api-key header');
 }
 
-console.log('✅ 環境變數載入成功');
-
 // 轉義 JavaScript 字串中的特殊字元
 function escapeJsString(str) {
   return String(str)
@@ -64,7 +62,4 @@ window.MM_SHEET_CONFIG = {
 `;
 
 fs.writeFileSync(configPath, configContent, 'utf8');
-console.log('✅ config.js 已生成');
-
-console.log('🎉 構建完成！');
 

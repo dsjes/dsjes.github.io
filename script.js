@@ -25,7 +25,6 @@
     if (now - last < DEBOUNCE_MS) return; // debounce
     debounceMap.set(key, now);
     // Placeholder: integrate with GA4 gtag or dataLayer
-    console.log('[GA4]', eventName, params);
   }
   window.MMAnalytics = { track };
 
@@ -78,9 +77,6 @@
       };
       if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
-        console.log('[Timeline API] x-api-key header added');
-      } else {
-        console.warn('[Timeline API] timelineApiKey is missing or empty:', timelineApiKey);
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
@@ -97,7 +93,6 @@
       let idxPartner = getHeaderIndex(headers, ['夥伴留言','partner','Partner']);
       
       if (idxYearMonth < 0 || idxTitle < 0 || idxDescription < 0 || idxPartner < 0){
-        console.warn('[Timeline Sheets] Header not matched, fallback by position');
         idxYearMonth = 0; idxTitle = 1; idxDescription = 3; idxPartner = 4; // 位置推斷：C=年/月(0), D=事件標題(1), F=事件描述(3), G=夥伴留言(4)
       }
       
@@ -122,7 +117,6 @@
       
       return mapped;
     } catch (error) {
-      console.error('[Timeline Sheets] Error fetching timeline events:', error);
       return [];
     }
   }
@@ -270,7 +264,6 @@
     const events = await fetchTimelineEventsViaAPI();
     
     if (events.length === 0){
-      console.warn('[Timeline] No events found, using default years');
       // 如果沒有資料，使用預設年份 2015-2025
       const defaultYears = ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'];
       defaultYears.forEach(function(year){
@@ -429,12 +422,10 @@
     const timelineApiKey = cfg.timelineApiKey || cfg.KEY_FOR_MM_10_YEARS_EVENT_PAGE;
 
     if (!sheetsApiEndpoint) {
-      console.warn('[Sheets] sheetsApiEndpoint not configured, skipping write operation');
       return false;
     }
 
     if (typeof message === 'string' && message.length > 1000) {
-      console.warn('[Sheets] message too long, skipping write operation');
       return false;
     }
 
@@ -460,14 +451,10 @@
       };
       if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
-        console.log('[Append Testimonial] x-api-key header added');
-      } else {
-        console.warn('[Append Testimonial] timelineApiKey is missing or empty:', timelineApiKey);
       }
 
       const response = await fetch(url, fetchOptions);
       if (!response.ok) {
-        console.warn('[Sheets] ⚠️ Failed to append testimonial:', response.status);
         return false;
       }
 
@@ -475,17 +462,14 @@
       try {
         const result = await response.json();
         if (result && result.success === false) {
-          console.warn('[Sheets] ⚠️ Backend reported failure:', result);
           return false;
         }
       } catch (_) {
         // 如果不是 JSON，直接視為成功（例如回傳空字串）
       }
 
-      console.log('[Sheets] ✅ Testimonial submitted successfully via backend');
       return true;
     } catch (error) {
-      console.error('[Sheets] ❌ Error submitting testimonial:', error);
       return false;
     }
   }
@@ -506,9 +490,6 @@
       };
       if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
-        console.log('[User Comment API] x-api-key header added');
-      } else {
-        console.warn('[User Comment API] timelineApiKey is missing or empty:', timelineApiKey);
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) return [];
@@ -521,7 +502,6 @@
       let idxMessage  = getHeaderIndex(headers, ['調整後的留言內容','message','Message']);
       let idxName     = getHeaderIndex(headers, ['用戶名稱','name','Name']);
       if (idxApproved < 0 || idxMessage < 0 || idxName < 0){
-        console.warn('[Sheets] Header not matched, fallback by position');
         idxApproved = 0; idxMessage = 1; idxName = 2; // 位置推斷：range 第一欄=審核狀態、第二欄=留言、第三欄=名稱
       }
       const mapped = rows.map(function(r){
@@ -532,9 +512,6 @@
         };
       }).filter(function(t){ return t.text.trim().length > 0; });
       const approvedOnly = mapped.filter(function(t){ return t.approved; });
-      if (approvedOnly.length === 0){
-        console.warn('[Sheets] No approved rows matched (value must be "已通過")');
-      }
       return approvedOnly;
     } catch (_) {
       return [];
@@ -578,7 +555,6 @@
       let idxMessage  = getHeaderIndex(headers, ['調整後的留言內容','message','Message']);
       let idxName     = getHeaderIndex(headers, ['用戶名稱','name','Name']);
       if (idxApproved < 0 || idxMessage < 0 || idxName < 0){
-        console.warn('[Sheets CSV] Header not matched, fallback by position');
         idxApproved = 0; idxMessage = 1; idxName = 2;
       }
       const mapped = rows.map(function(r){
@@ -589,9 +565,6 @@
         };
       }).filter(function(t){ return t.text.trim().length > 0; });
       const approvedOnly = mapped.filter(function(t){ return t.approved; });
-      if (approvedOnly.length === 0){
-        console.warn('[Sheets CSV] No approved rows matched (value must be "已通過")');
-      }
       return approvedOnly;
     } catch (_) {
       return [];
@@ -986,13 +959,11 @@
   // 將 YouTube 連結轉換為嵌入格式
   function convertToYouTubeEmbed(url){
     if (!url || typeof url !== 'string') {
-      console.warn('[YouTube URL] Invalid URL provided:', url);
       return null;
     }
     
     const trimmedUrl = url.trim();
     if (!trimmedUrl) {
-      console.warn('[YouTube URL] Empty URL provided');
       return null;
     }
     
@@ -1002,7 +973,6 @@
       if (embedMatch && embedMatch[1] && embedMatch[1].length > 5) {
         return trimmedUrl;
       } else {
-        console.warn('[YouTube URL] Invalid embed URL:', trimmedUrl);
         return null;
       }
     }
@@ -1045,22 +1015,17 @@
           if (paramsStr) {
             embedUrl += `?${paramsStr}`;
           }
-          console.log('[YouTube URL] Converted to embed:', embedUrl);
           return embedUrl;
         } catch (e) {
           // 如果 URL 解析失敗，返回簡單的 embed URL
-          console.log('[YouTube URL] Using simple embed format:', videoId);
           return `https://www.youtube.com/embed/${videoId}`;
         }
-      } else {
-        console.warn('[YouTube URL] Could not extract valid video ID from:', trimmedUrl);
       }
     } catch (error) {
-      console.error('[YouTube URL] Error parsing URL:', trimmedUrl, error);
+      // URL 解析失敗
     }
     
     // 如果無法識別格式，返回 null（不要返回無效的 URL）
-    console.warn('[YouTube URL] Failed to convert URL, returning null:', trimmedUrl);
     return null;
   }
   
@@ -1080,24 +1045,9 @@
       };
       if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
-        console.log('[Lunch Stream API] x-api-key header added, value length:', timelineApiKey.length);
-        console.log('[Lunch Stream API] Request URL:', url);
-        console.log('[Lunch Stream API] Request headers:', JSON.stringify(fetchOptions.headers));
-      } else {
-        console.warn('[Lunch Stream API] timelineApiKey is missing or empty:', timelineApiKey);
-        console.warn('[Lunch Stream API] Config object:', cfg);
       }
       const res = await fetch(url, fetchOptions);
       if (!res.ok) {
-        console.error('[Lunch Stream API] Request failed:', res.status, res.statusText);
-        console.error('[Lunch Stream API] Response headers:', Object.fromEntries(res.headers.entries()));
-        // 嘗試讀取錯誤響應內容
-        try {
-          const errorText = await res.text();
-          console.error('[Lunch Stream API] Error response:', errorText);
-        } catch (e) {
-          console.error('[Lunch Stream API] Could not read error response');
-        }
         return [];
       }
       const json = await res.json();
@@ -1113,7 +1063,6 @@
       let idxEmbedVideo = getHeaderIndex(headers, ['嵌入YT影片','嵌入 YT 影片','embed','Embed']);
       
       if (idxDate < 0 || idxLink < 0 || idxShowButton < 0 || idxEmbedVideo < 0){
-        console.warn('[Lunch Events Sheets] Header not matched, fallback by position');
         idxDate = 0; idxLink = 1; idxShowButton = 2; idxEmbedVideo = 3;
       }
       
@@ -1137,7 +1086,6 @@
       
       return mapped;
     } catch (error) {
-      console.error('[Lunch Events Sheets] Error fetching lunch events:', error);
       return [];
     }
   }
@@ -1152,7 +1100,6 @@
     const events = await fetchLunchEventsViaAPI();
     
     if (events.length === 0){
-      console.warn('[Lunch Events] No events found, using default buttons');
       return;
     }
     
@@ -1170,13 +1117,7 @@
       const embedUrl = convertToYouTubeEmbed(firstEmbedEvent.link);
       if (embedUrl) {
         lunchEventVideo.src = embedUrl;
-        console.log('[Lunch Events] Successfully embedded video:', embedUrl);
-      } else {
-        console.error('[Lunch Events] Failed to convert URL to embed format:', firstEmbedEvent.link);
-        console.warn('[Lunch Events] Please check that the URL in Google Sheets is a valid YouTube link');
       }
-    } else {
-      console.log('[Lunch Events] No video to embed (no events with embedVideo=TRUE found)');
     }
     
     // 格式化日期文字，在適當位置換行
@@ -1253,28 +1194,6 @@
     });
   }
   
-  // 驗證配置並輸出調試信息
-  function validateConfig() {
-    const cfg = window.MM_SHEET_CONFIG || {};
-    console.log('[Config Validation] Full config:', cfg);
-    console.log('[Config Validation] timelineApiKey exists:', !!cfg.timelineApiKey);
-    console.log('[Config Validation] timelineApiKey value:', cfg.timelineApiKey ? `"${cfg.timelineApiKey}" (length: ${cfg.timelineApiKey.length})` : 'undefined');
-    console.log('[Config Validation] sheetsApiEndpoint:', cfg.sheetsApiEndpoint);
-    
-    if (!cfg.timelineApiKey || cfg.timelineApiKey.trim().length === 0) {
-      console.error('[Config Validation] ❌ timelineApiKey is missing or empty!');
-      console.error('[Config Validation] This will cause 401 Unauthorized errors.');
-    } else {
-      console.log('[Config Validation] ✅ timelineApiKey is set');
-    }
-  }
-  
-  // 在頁面載入後驗證配置
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', validateConfig);
-  } else {
-    validateConfig();
-  }
 
   // 啟動留言初始化
   initTestimonials();
