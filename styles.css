@@ -126,11 +126,41 @@ h2 {
   padding: 0.75rem 1.25rem; border-radius: 999rem; cursor: pointer; transition: .2s ease;
   box-shadow: var(--shadow-sm); font-weight: 600; font-size: 1rem;
   text-decoration: none; display: inline-block; text-align: center;
+  position: relative;
 }
 .btn--primary { background: #E7A03C; color:white}
 .btn--ghost { background: #fff; border-color: var(--mm-gray); }
 .btn:hover { filter: brightness(1.1); box-shadow: var(--shadow-md); }
 .btn:focus { outline: none; box-shadow: var(--focus); }
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn-loading {
+  color: transparent;
+}
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: 50%;
+  left: 50%;
+  margin-left: -0.5rem;
+  margin-top: -0.5rem;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spinner 0.6s linear infinite;
+}
+.btn--primary.btn-loading::after {
+  border-color: #fff;
+  border-top-color: transparent;
+}
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
 
 /* Wireframes */
 .wireframe { background: var(--mm-gray-200); border: 0.0625rem dashed var(--mm-gray); border-radius: var(--radius-md); }
@@ -242,7 +272,7 @@ h2 {
 .timeline-detail { margin-top: 0.75rem; color: var(--mm-gray-700); }
 
 /* Quiz */
-.grid-quiz { display: grid; grid-template-columns: 1.4fr 0.8fr; gap: 3rem; margin: 0 auto; align-items: center; padding: 0; }
+.grid-quiz { display: grid; grid-template-columns: 1fr; gap: 3rem; margin: 0 auto; align-items: center; justify-items: center; padding: 0; }
 .quiz-copy {
   display: flex;
   flex-direction: column;
@@ -265,6 +295,7 @@ h2 {
   aspect-ratio: var(--quiz-visual-aspect);
   border-radius: var(--radius-sm);
   background: #000;
+  margin-inline: auto;
 }
 .quiz-visual iframe {
   position: absolute;
@@ -589,9 +620,11 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     width: 100%;
   }
   .quiz-visual {
-    --quiz-visual-aspect: 3 / 4;
-    --quiz-visual-padding: 133.33%;
-    --quiz-visual-max-width: 28rem;
+    --quiz-visual-aspect: 9 / 16;
+    --quiz-visual-padding: 177.78%;
+    width: 100%;
+    max-width: 100%;
+    max-height: 600px;
     margin-inline: auto;
   }
   .quiz-copy {
@@ -632,7 +665,10 @@ textarea.inp { min-height: 4rem; resize: vertical; }
 @media (max-width: 47.999rem) and (orientation: landscape) {
   .quiz-visual {
     --quiz-visual-aspect: 9 / 16;
-    --quiz-visual-padding: 56.25%;
+    --quiz-visual-padding: 177.78%;
+    width: 100%;
+    max-width: 100%;
+    max-height: 500px;
   }
 }
 
@@ -640,10 +676,12 @@ textarea.inp { min-height: 4rem; resize: vertical; }
 @media (min-width: 48rem) {
   .carousel { overflow: hidden;}
   .quiz-visual {
-    --quiz-visual-aspect: 7 / 8;
-    --quiz-visual-padding: 72%;
-    --quiz-visual-max-width: 36rem;
-    margin-inline: 0;
+    --quiz-visual-aspect: 1 / 1;
+    --quiz-visual-padding: 100%;
+    width: 100%;
+    max-width: 100%;
+    max-height: 600px;
+    margin-inline: auto;
   }
   /* 平板版也使用上下排列，與手機版相同 */
   .testimonial-form-container {
@@ -734,9 +772,12 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     padding-bottom: 9rem;
   }
   .quiz-visual {
-    --quiz-visual-aspect: 1 / 1;
-    --quiz-visual-padding: 70%;
-    --quiz-visual-max-width: 44rem;
+    --quiz-visual-aspect: 16 / 9;
+    --quiz-visual-padding: 56.25%;
+    height: 600px;
+    width: auto;
+    max-width: 1200px;
+    aspect-ratio: var(--quiz-visual-aspect);
   }
   .hero-section {
     --container-max: 150rem; /* 桌面版本增加寬度到 2400px */

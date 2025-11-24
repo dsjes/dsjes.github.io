@@ -874,6 +874,7 @@
     const nameInput = document.getElementById('inp-testimonial-name');
     const emailInput = document.getElementById('inp-testimonial-email');
     const messageInput = document.getElementById('inp-testimonial-message');
+    const submitBtn = document.getElementById('btn-testimonial-submit');
     
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
@@ -911,21 +912,38 @@
     emailInput.classList.remove('error');
     messageInput.classList.remove('error');
     
-    // 嘗試寫入 Google Sheet
-    await appendTestimonialToSheet(name, email, message);
+    // 啟用 loading 狀態：禁用按鈕並顯示 spinner
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('btn-loading');
+    }
     
-    const newId = demoMessages.length + 1;
-    const t = { id: newId, name: name, text: message };
-    demoMessages.push(t);
-    // prepend to row1; 之後彈出感謝視窗，關閉後再滾到最左
-    const newCard = createCard(t);
-    row1.insertBefore(newCard, row1.firstChild);
-    // 確保新卡片的行數正確計算
-    setTimeout(function(){
-      adjustCardTextLineClamp(newCard);
-    }, 50);
-    form.reset();
-    openThanks();
+    try {
+      // 嘗試寫入 Google Sheet
+      await appendTestimonialToSheet(name, email, message);
+      
+      const newId = demoMessages.length + 1;
+      const t = { id: newId, name: name, text: message };
+      demoMessages.push(t);
+      // prepend to row1; 之後彈出感謝視窗，關閉後再滾到最左
+      const newCard = createCard(t);
+      row1.insertBefore(newCard, row1.firstChild);
+      // 確保新卡片的行數正確計算
+      setTimeout(function(){
+        adjustCardTextLineClamp(newCard);
+      }, 50);
+      form.reset();
+      openThanks();
+    } catch (error) {
+      console.error('提交表單時發生錯誤:', error);
+      alert('送出失敗，請稍後再試');
+    } finally {
+      // 恢復按鈕狀態
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('btn-loading');
+      }
+    }
   });
   
   // 視窗大小改變時重新調整所有卡片行數（使用 debounce 優化效能）
