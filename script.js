@@ -1080,12 +1080,26 @@
       };
       if (timelineApiKey && timelineApiKey.trim().length > 0) {
         fetchOptions.headers['x-api-key'] = timelineApiKey;
-        console.log('[Lunch Stream API] x-api-key header added');
+        console.log('[Lunch Stream API] x-api-key header added, value length:', timelineApiKey.length);
+        console.log('[Lunch Stream API] Request URL:', url);
+        console.log('[Lunch Stream API] Request headers:', JSON.stringify(fetchOptions.headers));
       } else {
         console.warn('[Lunch Stream API] timelineApiKey is missing or empty:', timelineApiKey);
+        console.warn('[Lunch Stream API] Config object:', cfg);
       }
       const res = await fetch(url, fetchOptions);
-      if (!res.ok) return [];
+      if (!res.ok) {
+        console.error('[Lunch Stream API] Request failed:', res.status, res.statusText);
+        console.error('[Lunch Stream API] Response headers:', Object.fromEntries(res.headers.entries()));
+        // 嘗試讀取錯誤響應內容
+        try {
+          const errorText = await res.text();
+          console.error('[Lunch Stream API] Error response:', errorText);
+        } catch (e) {
+          console.error('[Lunch Stream API] Could not read error response');
+        }
+        return [];
+      }
       const json = await res.json();
       const values = (json && Array.isArray(json.values)) ? json.values : [];
       if (values.length <= 1) return [];
@@ -1239,6 +1253,29 @@
     });
   }
   
+  // 驗證配置並輸出調試信息
+  function validateConfig() {
+    const cfg = window.MM_SHEET_CONFIG || {};
+    console.log('[Config Validation] Full config:', cfg);
+    console.log('[Config Validation] timelineApiKey exists:', !!cfg.timelineApiKey);
+    console.log('[Config Validation] timelineApiKey value:', cfg.timelineApiKey ? `"${cfg.timelineApiKey}" (length: ${cfg.timelineApiKey.length})` : 'undefined');
+    console.log('[Config Validation] sheetsApiEndpoint:', cfg.sheetsApiEndpoint);
+    
+    if (!cfg.timelineApiKey || cfg.timelineApiKey.trim().length === 0) {
+      console.error('[Config Validation] ❌ timelineApiKey is missing or empty!');
+      console.error('[Config Validation] This will cause 401 Unauthorized errors.');
+    } else {
+      console.log('[Config Validation] ✅ timelineApiKey is set');
+    }
+  }
+  
+  // 在頁面載入後驗證配置
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', validateConfig);
+  } else {
+    validateConfig();
+  }
+
   // 啟動留言初始化
   initTestimonials();
   // 啟動時間軸初始化
