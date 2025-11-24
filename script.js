@@ -759,7 +759,6 @@
       } else {
         row.scrollBy({ left: delta, behavior: 'smooth' });
       }
-      track('carousel_autoplay', { interval_ms: intervalMs, visible_count: '1-3' });
     }, intervalMs);
   }
   let row1Timer = null;

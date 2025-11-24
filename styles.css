@@ -76,8 +76,8 @@ h2 {
 .section-desc { color: var(--mm-gray-700); margin: 0 0 var(--space-lg); }
 #sec-quiz {
   background-color: rgba(248, 249, 250, 0.6);
-  padding-top: 6rem;
-  padding-bottom: 6rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 #sec-quiz .container {
   max-width: var(--content-max);
@@ -195,6 +195,15 @@ h2 {
   z-index: 1; 
   display: flex; 
   align-items: center;
+}
+.hero-section .ai-badge {
+  position: absolute;
+  bottom: 0.5rem;
+  right: var(--content-padding);
+  font-size: 0.75rem; /* 12px */
+  color: #B4B4B4;
+  margin: 0;
+  z-index: 2;
 }
 .grid-hero { 
   display: grid; 
@@ -540,7 +549,7 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     font-size: 1.0625rem;
   }
 
-  .hero-title { font-size: 2.35rem; }
+  .hero-title { font-size: 2rem; }
   .hero-subtitle { font-size: 1.2rem; display: inline; }
   .hero-section .banner {
     min-height: auto;
@@ -556,7 +565,7 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     object-position: center center;
   }
   .hero-section .banner-overlay {
-    padding: 1rem;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -577,6 +586,11 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+  }
+  .hero-section .ai-badge {
+    bottom: 0.5rem;
+    right: 1rem;
+    font-size: 0.6875rem; /* 11px - 手機上更小一點 */
   }
   .carousel { overflow: hidden;}
   .card-testimonial {
@@ -602,7 +616,7 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     flex-shrink: 0;
   }
   .timeline-item-container {
-    width: 85%;
+    width: 100%;
     margin: 0 auto;
     height: auto;
     aspect-ratio: 1 / 1;
@@ -768,8 +782,8 @@ textarea.inp { min-height: 4rem; resize: vertical; }
   .carousel { overflow: hidden;}
   .sec { padding: var(--space-xxl) 0; }
   #sec-quiz {
-    padding-top: 9rem;
-    padding-bottom: 9rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
   .quiz-visual {
     --quiz-visual-aspect: 16 / 9;
@@ -1095,6 +1109,13 @@ textarea.inp { min-height: 4rem; resize: vertical; }
 
 /* 響應式設計：手機上垂直排列 */
 @media (max-width: 47.999rem) {
+  .hero-visual {
+    position: relative;
+    width: 90%;
+    padding-bottom: 56%;
+    height: 0;
+    overflow: hidden;
+}
   .offer-header {
     width: 95%;
     padding: 2rem 0.5rem 1rem;
