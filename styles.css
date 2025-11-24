@@ -542,14 +542,14 @@ textarea.inp { min-height: 4rem; resize: vertical; }
     background-size: 100% auto;
   }
   .wf-hero-img, .wf-illust { min-height: 8rem;}
-  .section-title { font-size: 1.75rem; }
+  .section-title { font-size: 1.6rem; }
   .section-description,
   .lunch-event-description,
   .offer-description {
     font-size: 1.0625rem;
   }
 
-  .hero-title { font-size: 2rem; }
+  .hero-title { font-size: 1.8rem; }
   .hero-subtitle { font-size: 1.2rem; display: inline; }
   .hero-section .banner {
     min-height: auto;
@@ -1111,7 +1111,7 @@ textarea.inp { min-height: 4rem; resize: vertical; }
 @media (max-width: 47.999rem) {
   .hero-visual {
     position: relative;
-    width: 90%;
+    width: 100%;
     padding-bottom: 56%;
     height: 0;
     overflow: hidden;
