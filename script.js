@@ -1003,7 +1003,6 @@
     const min = Math.floor(remain / (1000*60)) % 60;
     const hr = Math.floor(remain / (1000*60*60));
     if (countdownEl){ countdownEl.textContent = `${fmt(hr)}:${fmt(min)}:${fmt(sec)}`; }
-    track('countdown_view', { remaining_sec: Math.floor(remain/1000) });
   }
   setInterval(tick, COUNTDOWN_ANALYTICS_INTERVAL_MS); // update every minute for analytics
   setInterval(function(){ if (countdownEl) tick(); }, COUNTDOWN_UI_INTERVAL_MS); // UI refresh each second
